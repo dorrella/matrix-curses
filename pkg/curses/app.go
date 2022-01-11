@@ -50,9 +50,18 @@ func (a *App) Run() {
 
 	//init windows
 	a.matrix.init()
+	a.matrix.window.Refresh()
+
+	_, c := a.matrix.window.MaxYX()
+	total_height, total_width := w.MaxYX()
+	height := total_height - 2
+	con := newConsole(height)
+	width := total_width - 3 - c
+	con.init(height, width, 1, c+2)
+	con.window.Printf("%d %d %d %d\n", height, width, 1, c+1)
+	con.window.Refresh()
 
 	//wait
-	a.matrix.window.Refresh()
-	_ = a.matrix.window.GetChar()
-
+	//_ = a.matrix.window.GetChar()
+	_ = con.window.GetChar()
 }

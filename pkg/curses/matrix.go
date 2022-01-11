@@ -45,6 +45,12 @@ func (m *matrix) init() {
 	}
 	m.window = window
 	m.window.SetBackground(gc.ColorPair(color_Matrix))
+
+	for r := 0; r < m.rows; r++ {
+		for c := 0; c < m.cols; c++ {
+			m.setBoxChar(r, c, m.matrix[r][c])
+		}
+	}
 }
 
 func (m *matrix) setBoxChar(r, c int, value rune) {
