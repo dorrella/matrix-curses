@@ -51,6 +51,85 @@ func (m *matrix) init() {
 			m.setBoxChar(r, c, m.matrix[r][c])
 		}
 	}
+
+	end_r := new_h - 1
+	end_c := new_w - 1
+	for r := 0; r < new_h; r++ {
+		even_row := r%2 == 0
+		for c := 0; c < new_w; c++ {
+			even_col := c%2 == 0
+			if !even_row && !even_col {
+				//non box space
+				continue
+			}
+
+			//if we prit a bullet, something is not being handled
+			var char gc.Char = gc.ACS_BULLET
+
+			if r == 0 && c == 0 {
+				// top left corner
+				// should be gc.ACS_ULCORNER, but there is a bug
+				char = gc.ACS_LLCORNER
+			} else if r == 0 && c == end_c {
+				// top right corner
+				char = gc.ACS_URCORNER
+			} else if r == end_r && c == 0 {
+				// bottom left corner
+				// should be gc.ACS_LLCORNER
+				char = gc.ACS_ULCORNER
+			} else if r == end_r && c == end_c {
+				// bottom right corner
+				char = gc.ACS_LRCORNER
+			} else if r == 0 {
+				//top edge
+				char = gc.ACS_HLINE
+				if even_col {
+					//top edge tee
+					char = gc.ACS_TTEE
+				}
+			} else if r == end_r {
+				//bottom edge
+				char = gc.ACS_HLINE
+				if even_col {
+					//bottom edge tee
+					char = gc.ACS_BTEE
+				}
+			} else if c == 0 {
+				//left edge
+				char = gc.ACS_VLINE
+				if even_row {
+					//left edge tee
+					char = gc.ACS_LTEE
+				}
+			} else if c == end_c {
+				//right edge
+				char = gc.ACS_VLINE
+				if even_row {
+					//right edge tee
+					char = gc.ACS_RTEE
+				}
+			} else {
+				//inner edges
+				if even_row && even_col {
+					// +
+					char = gc.ACS_PLUS
+				} else if even_row {
+					// even rows are horizontal lines
+					char = gc.ACS_HLINE
+				} else {
+					// rest are verticle
+					char = gc.ACS_VLINE
+				}
+			}
+
+			m.window.ColorOn(color_Matrix)
+			//m.window.MovePrintf(r, c, "%s", char)
+			m.window.Move(r, c)
+			m.window.AddChar(char)
+			m.window.ColorOff(color_Matrix)
+		}
+	}
+
 }
 
 func (m *matrix) setBoxChar(r, c int, value rune) {

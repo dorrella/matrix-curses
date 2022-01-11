@@ -28,7 +28,7 @@ func setColors() {
 	}
 
 	//border
-	err = gc.InitPair(color_Matrix, gc.C_WHITE, gc.C_WHITE)
+	err = gc.InitPair(color_Matrix, gc.C_WHITE, gc.C_BLACK)
 	if err != nil {
 		panic(err)
 	}
