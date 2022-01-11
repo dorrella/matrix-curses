@@ -1,16 +1,17 @@
 package curses
 
 import (
+	"dorrella.com/eight-queens/pkg/ringbuff"
 	gc "github.com/gbin/goncurses"
 )
 
 type console struct {
 	window *gc.Window
-	buff   []string
+	buff   *ringbuff.RingBuff
 }
 
 func newConsole(size int) *console {
-	b := make([]string, size)
+	b := ringbuff.NewRingBuff(size)
 	return &console{
 		window: nil,
 		buff:   b,
@@ -24,4 +25,23 @@ func (con *console) init(h, w, r, c int) {
 	}
 	con.window = window
 	con.window.SetBackground(gc.ColorPair(color_Console))
+}
+
+func (con *console) AddMessage(s string) {
+	win := con.window
+	buf := con.buff
+
+	//todo split on length?
+	buf.Add(s)
+
+	win.Erase()
+	for i := 0; i < buf.GetSize(); i++ {
+		//fix
+		line, _ := buf.Get(i)
+		win.ColorOn(color_Console)
+		win.MovePrint(i, 0, line)
+		win.ColorOff(color_Console)
+	}
+	win.Refresh()
+
 }

@@ -1,6 +1,7 @@
 package curses
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 
@@ -17,7 +18,8 @@ func catchSignal() {
 }
 
 type App struct {
-	matrix *matrix
+	matrix  *matrix
+	console *console
 }
 
 func NewApp(rows, cols int) *App {
@@ -28,7 +30,7 @@ func NewApp(rows, cols int) *App {
 	return a
 }
 
-func (a *App) Run() {
+func (a *App) Run(log <-chan string) {
 	w, err := gc.Init()
 	defer gc.End()
 	if err != nil {
@@ -55,13 +57,21 @@ func (a *App) Run() {
 	_, c := a.matrix.window.MaxYX()
 	total_height, total_width := w.MaxYX()
 	height := total_height - 2
-	con := newConsole(height)
 	width := total_width - 3 - c
-	con.init(height, width, 1, c+2)
-	con.window.Printf("%d %d %d %d\n", height, width, 1, c+1)
-	con.window.Refresh()
+	msg := fmt.Sprintf("initializing %dx%d at (%d,%d)\n", height, width, 1, c+1)
+
+	a.console = newConsole(height)
+	a.console.init(height, width, 1, c+2)
+
+	a.console.AddMessage(msg)
+	a.console.AddMessage("")
 
 	//wait
-	//_ = a.matrix.window.GetChar()
-	_ = con.window.GetChar()
+	for true {
+		select {
+		case line := <-log:
+			a.console.AddMessage(line)
+
+		}
+	}
 }
