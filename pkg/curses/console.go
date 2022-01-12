@@ -24,7 +24,7 @@ func (con *console) init(h, w, r, c int) {
 		panic(err)
 	}
 	con.window = window
-	con.window.SetBackground(gc.ColorPair(color_Console))
+	con.window.SetBackground(gc.ColorPair(COLOR_CONSOLE))
 }
 
 func (con *console) AddMessage(s string) {
@@ -38,9 +38,9 @@ func (con *console) AddMessage(s string) {
 	for i := 0; i < buf.GetSize(); i++ {
 		//fix
 		line, _ := buf.Get(i)
-		win.ColorOn(color_Console)
+		win.ColorOn(COLOR_CONSOLE)
 		win.MovePrint(i, 0, line)
-		win.ColorOff(color_Console)
+		win.ColorOff(COLOR_CONSOLE)
 	}
 	win.Refresh()
 

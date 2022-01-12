@@ -44,11 +44,17 @@ func (m *matrix) init() {
 		panic(err)
 	}
 	m.window = window
-	m.window.SetBackground(gc.ColorPair(color_Matrix))
+	m.window.SetBackground(gc.ColorPair(COLOR_MATRIX))
 
 	for r := 0; r < m.rows; r++ {
 		for c := 0; c < m.cols; c++ {
-			m.setBoxChar(r, c, m.matrix[r][c])
+			ce := ChessEvent{
+				Row:   r,
+				Col:   c,
+				Char:  m.matrix[r][c],
+				Color: COLOR_ENTRY,
+			}
+			m.setBoxChar(&ce)
 		}
 	}
 
@@ -122,20 +128,20 @@ func (m *matrix) init() {
 				}
 			}
 
-			m.window.ColorOn(color_Matrix)
+			m.window.ColorOn(COLOR_MATRIX)
 			//m.window.MovePrintf(r, c, "%s", char)
 			m.window.Move(r, c)
 			m.window.AddChar(char)
-			m.window.ColorOff(color_Matrix)
+			m.window.ColorOff(COLOR_MATRIX)
 		}
 	}
 
 }
 
-func (m *matrix) setBoxChar(r, c int, value rune) {
+func (m *matrix) setBoxChar(ce *ChessEvent) {
 	height, width := m.window.MaxYX()
-	new_r := r*2 + 1
-	new_c := c*2 + 1
+	new_r := ce.Row*2 + 1
+	new_c := ce.Col*2 + 1
 
 	if new_r > height {
 		panic(new_r)
@@ -145,7 +151,9 @@ func (m *matrix) setBoxChar(r, c int, value rune) {
 		panic(new_c)
 	}
 
-	m.window.ColorOn(color_Entry)
-	m.window.MovePrintf(new_r, new_c, "%c", value)
-	m.window.ColorOff(color_Entry)
+	m.matrix[ce.Row][ce.Col] = ce.Char
+
+	m.window.ColorOn(ce.Color)
+	m.window.MovePrintf(new_r, new_c, "%c", ce.Char)
+	m.window.ColorOff(ce.Color)
 }

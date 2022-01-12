@@ -30,7 +30,7 @@ func NewApp(rows, cols int) *App {
 	return a
 }
 
-func (a *App) Run(log <-chan string) {
+func (a *App) Run(log <-chan string, event <-chan *ChessEvent) {
 	w, err := gc.Init()
 	defer gc.End()
 	if err != nil {
@@ -46,7 +46,7 @@ func (a *App) Run(log <-chan string) {
 
 	//init colors
 	setColors()
-	w.SetBackground(gc.ColorPair(color_BG))
+	w.SetBackground(gc.ColorPair(COLOR_BG))
 
 	w.Refresh()
 
@@ -69,9 +69,17 @@ func (a *App) Run(log <-chan string) {
 	//wait
 	for true {
 		select {
-		case line := <-log:
+		case line, ok := <-log:
+			if !ok {
+				break
+			}
 			a.console.AddMessage(line)
-
+		case e, ok := <-event:
+			if !ok {
+				break
+			}
+			a.matrix.setBoxChar(e)
+			a.matrix.window.Refresh()
 		}
 	}
 }

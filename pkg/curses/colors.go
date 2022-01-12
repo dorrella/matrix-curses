@@ -5,10 +5,10 @@ import (
 )
 
 const (
-	color_BG      int16 = 1
-	color_Matrix        = 2
-	color_Entry         = 3
-	color_Console       = 4
+	COLOR_BG      int16 = 1
+	COLOR_MATRIX        = 2
+	COLOR_ENTRY         = 3
+	COLOR_CONSOLE       = 4
 )
 
 func setColors() {
@@ -22,25 +22,25 @@ func setColors() {
 	}
 
 	//set background
-	err = gc.InitPair(color_BG, gc.C_WHITE, gc.C_BLACK)
+	err = gc.InitPair(COLOR_BG, gc.C_WHITE, gc.C_BLACK)
 	if err != nil {
 		panic(err)
 	}
 
 	//border
-	err = gc.InitPair(color_Matrix, gc.C_WHITE, gc.C_BLACK)
+	err = gc.InitPair(COLOR_MATRIX, gc.C_WHITE, gc.C_BLACK)
 	if err != nil {
 		panic(err)
 	}
 
 	//entry color
-	err = gc.InitPair(color_Entry, gc.C_YELLOW, gc.C_BLACK)
+	err = gc.InitPair(COLOR_ENTRY, gc.C_RED, gc.C_BLACK)
 	if err != nil {
 		panic(err)
 	}
 
 	//console
-	err = gc.InitPair(color_Console, gc.C_BLACK, gc.C_WHITE)
+	err = gc.InitPair(COLOR_CONSOLE, gc.C_BLACK, gc.C_WHITE)
 	if err != nil {
 		panic(err)
 	}
