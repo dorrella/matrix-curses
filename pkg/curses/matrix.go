@@ -4,6 +4,7 @@ import (
 	gc "github.com/gbin/goncurses"
 )
 
+//get size of box with padding included
 func getBoxSize(r, c int) (int, int) {
 	//err on 0x0?
 	new_r := r*2 + 1
@@ -11,33 +12,25 @@ func getBoxSize(r, c int) (int, int) {
 	return new_r, new_c
 }
 
+// wrapper for matrix handling
 type matrix struct {
 	window *gc.Window // window
-	matrix [][]rune   // matrix
-	rows   int
-	cols   int
+	rows   int        // rows
+	cols   int        // cols
 }
 
+//initializes the matrix
 func newMatrix(rows, cols int) *matrix {
-	new_h, new_w := getBoxSize(rows, cols)
-
-	m := make([][]rune, new_h)
-	for r := 0; r < new_h; r++ {
-		m[r] = make([]rune, new_w)
-		for c := 0; c < new_w; c++ {
-			m[r][c] = ' '
-		}
-	}
-
 	return &matrix{
 		window: nil,
-		matrix: m,
 		rows:   rows,
 		cols:   cols,
 	}
 }
 
+//initialize program
 func (m *matrix) init() {
+	//create window
 	new_h, new_w := getBoxSize(m.rows, m.cols)
 	window, err := gc.NewWindow(new_h, new_w, 1, 1)
 	if err != nil {
@@ -46,22 +39,26 @@ func (m *matrix) init() {
 	m.window = window
 	m.window.SetBackground(gc.ColorPair(COLOR_MATRIX))
 
+	//initialize empty matrix
 	for r := 0; r < m.rows; r++ {
 		for c := 0; c < m.cols; c++ {
-			ce := ChessEvent{
+			me := MatrixEvent{
 				Row:   r,
 				Col:   c,
-				Char:  m.matrix[r][c],
+				Char:  ' ',
 				Color: COLOR_ENTRY,
 			}
-			m.setBoxChar(&ce)
+			m.setBoxChar(&me)
 		}
 	}
 
-	end_r := new_h - 1
-	end_c := new_w - 1
+	// fill in the grid
+	end_r := new_h - 1 //last valid row
+	end_c := new_w - 1 //last valid col
+
 	for r := 0; r < new_h; r++ {
 		even_row := r%2 == 0
+
 		for c := 0; c < new_w; c++ {
 			even_col := c%2 == 0
 			if !even_row && !even_col {
@@ -138,10 +135,11 @@ func (m *matrix) init() {
 
 }
 
-func (m *matrix) setBoxChar(ce *ChessEvent) {
+//set character using a MatrixEvent
+func (m *matrix) setBoxChar(me *MatrixEvent) {
 	height, width := m.window.MaxYX()
-	new_r := ce.Row*2 + 1
-	new_c := ce.Col*2 + 1
+	new_r := me.Row*2 + 1
+	new_c := me.Col*2 + 1
 
 	if new_r > height {
 		panic(new_r)
@@ -151,9 +149,7 @@ func (m *matrix) setBoxChar(ce *ChessEvent) {
 		panic(new_c)
 	}
 
-	m.matrix[ce.Row][ce.Col] = ce.Char
-
-	m.window.ColorOn(ce.Color)
-	m.window.MovePrintf(new_r, new_c, "%c", ce.Char)
-	m.window.ColorOff(ce.Color)
+	m.window.ColorOn(me.Color)
+	m.window.MovePrintf(new_r, new_c, "%c", me.Char)
+	m.window.ColorOff(me.Color)
 }

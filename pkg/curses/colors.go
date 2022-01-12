@@ -11,6 +11,7 @@ const (
 	COLOR_CONSOLE       = 4
 )
 
+//set color pairs
 func setColors() {
 	//colors
 	if !gc.HasColors() {

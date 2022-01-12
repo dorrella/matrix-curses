@@ -17,6 +17,7 @@ func catchSignal() {
 	os.Exit(0)
 }
 
+//wrapper to print matrix based puzzles
 type App struct {
 	matrix  *matrix
 	console *console
@@ -30,7 +31,7 @@ func NewApp(rows, cols int) *App {
 	return a
 }
 
-func (a *App) Run(log <-chan string, event <-chan *ChessEvent) {
+func (a *App) Run(log <-chan string, event <-chan *MatrixEvent) {
 	w, err := gc.Init()
 	defer gc.End()
 	if err != nil {
@@ -66,20 +67,26 @@ func (a *App) Run(log <-chan string, event <-chan *ChessEvent) {
 	a.console.AddMessage(msg)
 	a.console.AddMessage("")
 
-	//wait
+	//process inputs
 	for true {
 		select {
 		case line, ok := <-log:
 			if !ok {
-				break
+				goto exit
 			}
 			a.console.AddMessage(line)
+
 		case e, ok := <-event:
 			if !ok {
-				break
+				goto exit
 			}
 			a.matrix.setBoxChar(e)
 			a.matrix.window.Refresh()
 		}
 	}
+
+exit:
+	a.console.AddMessage("")
+	a.console.AddMessage("press any key to quit")
+	_ = a.matrix.window.GetChar()
 }

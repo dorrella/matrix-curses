@@ -1,13 +1,17 @@
 package queens
 
+//hard-coded size is good enough for now
 type Board struct {
 	board [8][8]bool
 }
 
+//not really needed, but let's be consistent
+//could also be private
 func NewBoard() *Board {
 	return &Board{}
 }
 
+//is the space within the bounds of the board
 func (b *Board) IsValid(r, c int) bool {
 	if r < 0 || c < 0 {
 		return false
@@ -19,6 +23,7 @@ func (b *Board) IsValid(r, c int) bool {
 	return true
 }
 
+//is it ok to put a queen here
 func (b *Board) IsSafe(r, c int) bool {
 	if !b.IsValid(r, c) {
 		return false
@@ -39,7 +44,7 @@ func (b *Board) IsSafe(r, c int) bool {
 			}
 		}
 
-		//diags?
+		//diags
 		//top left
 		row := r - i
 		col := c - i
@@ -70,5 +75,6 @@ func (b *Board) IsSafe(r, c int) bool {
 		}
 	}
 
+	//hard to believe we can even get here
 	return true
 }
