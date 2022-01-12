@@ -1,7 +1,7 @@
 package curses
 
 import (
-	"dorrella.com/eight-queens/pkg/ringbuff"
+	"github.com/dorrella/matrix-curses/pkg/ringbuff"
 	gc "github.com/gbin/goncurses"
 )
 

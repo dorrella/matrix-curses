@@ -1,8 +1,8 @@
 package main
 
 import (
-	"dorrella.com/eight-queens/pkg/curses"
-	"dorrella.com/eight-queens/pkg/queens"
+	"github.com/dorrella/matrix-curses/pkg/curses"
+	"github.com/dorrella/matrix-curses/pkg/queens"
 )
 
 // Visualize 8 queens with ncurses

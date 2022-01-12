@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	rb "dorrella.com/eight-queens/pkg/ringbuff"
+	rb "github.com/dorrella/matrix-curses/pkg/ringbuff"
 )
 
 func print(r *rb.RingBuff) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"dorrella.com/eight-queens/pkg/curses"
+	"github.com/dorrella/matrix-curses/pkg/curses"
 )
 
 type Queens struct {
