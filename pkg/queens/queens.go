@@ -35,7 +35,7 @@ func (q *Queens) Run() {
 //helper function to do the work
 //true on success
 func (q *Queens) step(row int) bool {
-	time.Sleep(time.Millisecond * 500)
+	time.Sleep(time.Millisecond * 333)
 	//exit condition is starting row 9 of an 8x8 board
 	if row >= 8 {
 		q.log <- "success"
